@@ -1,0 +1,23 @@
+
+<app-titled-container title="Ranked by distance from Eberswalder Straße 55">
+  <app-house-ranking-table
+    [displayedColumns]="defaultColumns"
+    [data]="houseDistanceList">
+  </app-house-ranking-table>
+</app-titled-container>
+
+
+<app-titled-container title="Ranked by rooms">
+  <app-house-ranking-table
+    [displayedColumns]="defaultColumns"
+    [data]="houseRoomList">
+  </app-house-ranking-table>
+</app-titled-container>
+
+<app-titled-container title="Ranked by street name">
+  <app-house-ranking-table
+    [displayedColumns]="defaultColumns"
+    [data]="houseStreetList">
+  </app-house-ranking-table>
+</app-titled-container>
+

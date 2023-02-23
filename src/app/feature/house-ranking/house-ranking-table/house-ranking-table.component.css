@@ -1,0 +1,9 @@
+.table-width {
+  width: 100%;
+}
+
+th, td {
+  width: 200px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
