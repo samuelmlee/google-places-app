@@ -1,4 +1,9 @@
-<table mat-table [dataSource]="dataSource" class="mat-elevation-z8 table-width">
+<table
+  mat-table
+  matSort
+  [dataSource]="(dataSource$ | async)!"
+  class="mat-elevation-z8 table-width"
+>
   <!-- Columns -->
   <ng-container *ngFor="let col of displayedColumns" [matColumnDef]="col.name">
     <th mat-header-cell *matHeaderCellDef>{{ col.title }}</th>

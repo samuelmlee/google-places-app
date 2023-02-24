@@ -4,12 +4,11 @@ import { HouseApi } from '../service/house-api.service';
 import { ColumnDef } from '../house-ranking-table/model/column-def';
 import { HouseView, updateDistance } from '../model/house-view';
 import { LatLon } from '../model/lat-lon';
-import { House } from '../model/house';
 
 @Component({
   selector: 'app-house-ranking-dashboard',
   templateUrl: './house-ranking-dashboard.component.html',
-  styleUrls: ['./house-ranking-dashboard.component.css'],
+  styleUrls: ['./house-ranking-dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HouseRankingDashboardComponent implements OnInit {
@@ -47,8 +46,14 @@ export class HouseRankingDashboardComponent implements OnInit {
           houses,
           this.distanceReference
         );
-        this.houseDistanceList = [...updatedHouses].sort((a, b) =>
-          a.distance < b.distance ? -1 : 1
+
+        this.houseDistanceList = updatedHouses.sort(
+          (a: HouseView, b: HouseView) => {
+            if (!a.distance || !b.distance) {
+              return 0;
+            }
+            return a.distance < b.distance ? -1 : 1;
+          }
         );
         if (!updatedHouses) {
           return;

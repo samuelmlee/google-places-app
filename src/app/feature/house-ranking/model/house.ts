@@ -1,11 +1,11 @@
-import {LatLon} from './lat-lon';
-import {HouseParam} from './house-param';
+import { LatLon } from './lat-lon';
+import { HouseParam } from './house-param';
 
 /**
  * House model
  */
-export class House {
-  coords: LatLon;
-  params?: HouseParam;
+export type House = {
+  coords: LatLon | undefined;
+  params: HouseParam;
   street: string;
-}
+};

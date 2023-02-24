@@ -1,8 +1,8 @@
-import {House} from './house';
+import { House } from './house';
 
 /**
  * House data transfer model
  */
 export class HousesDto {
-  houses: House[];
+  houses: House[] = [];
 }
