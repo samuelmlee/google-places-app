@@ -1,1 +1,8 @@
-<app-house-ranking-dashboard></app-house-ranking-dashboard>
+<div class="app-container">
+  <div>
+    <app-place-search></app-place-search>
+  </div>
+  <google-map #googleMap *ngIf="mapApiLoaded | async">
+    <map-marker *ngFor="let location of locations$ | async"></map-marker>
+  </google-map>
+</div>

@@ -1,0 +1,21 @@
+<div>
+  <mat-form-field class="search-field">
+    <mat-label>Places</mat-label>
+    <input
+      type="text"
+      placeholder="Ex: Alexanderplatz"
+      matInput
+      [formControl]="inputControl"
+      [matAutocomplete]="auto"
+    />
+  </mat-form-field>
+
+  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+    <mat-option
+      *ngFor="let prediction of predictions$ | async"
+      [value]="prediction"
+    >
+      {{ prediction.description }}
+    </mat-option>
+  </mat-autocomplete>
+</div>

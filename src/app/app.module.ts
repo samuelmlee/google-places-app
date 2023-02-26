@@ -1,27 +1,28 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
+import { HttpClientJsonpModule, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { AppComponent } from './app.component';
-import { HouseRankingTableComponent } from './feature/house-ranking/house-ranking-table/house-ranking-table.component';
-import { HouseRankingDashboardComponent } from './feature/house-ranking/house-ranking-dashboard/house-ranking-dashboard.component';
-import { MatTableModule } from '@angular/material/table';
-import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { GoogleMapsModule } from '@angular/google-maps';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { TitledContainerComponent } from './widget/titled-container/titled-container.component';
-import { MatSortModule } from '@angular/material/sort';
+import { AppComponent } from './app.component';
+import { PlaceSearchComponent } from './place-search/place-search.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HouseRankingTableComponent,
-    HouseRankingDashboardComponent,
-    TitledContainerComponent,
-  ],
+  declarations: [AppComponent, PlaceSearchComponent],
   imports: [
-    BrowserModule,
-    HttpClientModule,
-    MatTableModule,
     BrowserAnimationsModule,
-    MatSortModule,
+    BrowserModule,
+    CommonModule,
+    FormsModule,
+    GoogleMapsModule,
+    HttpClientModule,
+    HttpClientJsonpModule,
+    MatAutocompleteModule,
+    MatInputModule,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
