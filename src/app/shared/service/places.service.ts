@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { SearchType } from 'src/app/places-results/places-results-table/model/search-type';
 
 @Injectable({
   providedIn: 'root',
@@ -59,7 +60,7 @@ export class PlacesService {
 
   public async nearbySearchFromPrediction(
     prediction: google.maps.places.AutocompletePrediction,
-    type: string
+    type: SearchType
   ): Promise<google.maps.places.PlaceResult[]> {
     const detailsRequest: google.maps.places.PlaceDetailsRequest = {
       placeId: prediction.place_id,

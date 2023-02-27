@@ -1,4 +1,9 @@
-<!-- <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+<table
+  mat-table
+  *ngIf="dataSource"
+  [dataSource]="dataSource"
+  class="mat-elevation-z8"
+>
   <ng-container
     *ngFor="let column of columns"
     [matColumnDef]="column.columnDef"
@@ -13,4 +18,4 @@
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-</table> -->
+</table>

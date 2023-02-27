@@ -7,6 +7,7 @@ import {
   distinctUntilChanged,
   Subscription,
 } from 'rxjs';
+import { PlacesResultsService } from '../places-results/service/places-results.service';
 import { PlacesService } from '../shared/service/places.service';
 
 @Component({
@@ -23,7 +24,10 @@ export class PlaceSearchComponent implements OnInit, OnDestroy {
   public predictions$ = this._predictionsSubj.asObservable();
   public inputControl = new FormControl();
 
-  constructor(private _placesService: PlacesService) {}
+  constructor(
+    private _placesService: PlacesService,
+    private _placesResultsService: PlacesResultsService
+  ) {}
 
   ngOnInit(): void {
     this._valueChangeSub = this.inputControl.valueChanges
@@ -51,14 +55,11 @@ export class PlaceSearchComponent implements OnInit, OnDestroy {
     return prediction?.description ?? '';
   }
 
-  public locationSelected(event: MatAutocompleteActivatedEvent): void {
+  public predictionSelected(event: MatAutocompleteActivatedEvent): void {
     if (!event.option) {
       return;
     }
     const prediction = event.option.value;
-    const placeResults = this._placesService.nearbySearchFromPrediction(
-      prediction,
-      'restaurant'
-    );
+    this._placesResultsService.nearbySearchFromPrediction(prediction);
   }
 }

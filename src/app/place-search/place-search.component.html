@@ -22,7 +22,7 @@
   <mat-autocomplete
     #auto="matAutocomplete"
     [displayWith]="displayFn"
-    (optionSelected)="locationSelected($event)"
+    (optionSelected)="predictionSelected($event)"
   >
     <mat-option
       *ngFor="let prediction of predictions$ | async"
