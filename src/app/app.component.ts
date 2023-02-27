@@ -2,9 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component, ViewChild } from '@angular/core';
 import { GoogleMap } from '@angular/google-maps';
 import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs';
+import { environment } from '../environments/environment';
 import { PlacesService } from './shared/service/places.service';
-
-export const API_KEY = 'AIzaSyB7Mli9ai8l5sRgTwXfZTdOPaZ7YwS1Csk';
 
 @Component({
   selector: 'app-root',
@@ -30,7 +29,7 @@ export class AppComponent {
   ) {
     this.mapApiLoaded = _httpClient
       .jsonp(
-        `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&libraries=places`,
+        `https://maps.googleapis.com/maps/api/js?key=${environment.googleApiKey}&libraries=places`,
         'callback'
       )
       .pipe(

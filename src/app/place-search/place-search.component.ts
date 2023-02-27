@@ -35,7 +35,7 @@ export class PlaceSearchComponent implements OnInit {
   public displayFn(
     prediction: google.maps.places.AutocompletePrediction
   ): string {
-    return prediction.description;
+    return prediction?.description ?? '';
   }
 
   public suggestionSelected(suggestion: any) {
