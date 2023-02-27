@@ -1,6 +1,7 @@
 <div class="app-container">
   <div>
     <app-place-search></app-place-search>
+    <app-places-results></app-places-results>
   </div>
   <google-map #googleMap *ngIf="mapApiLoaded | async">
     <map-marker *ngFor="let location of locations$ | async"></map-marker>

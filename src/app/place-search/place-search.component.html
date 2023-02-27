@@ -19,7 +19,11 @@
     </button>
   </mat-form-field>
 
-  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+  <mat-autocomplete
+    #auto="matAutocomplete"
+    [displayWith]="displayFn"
+    (optionSelected)="locationSelected($event)"
+  >
     <mat-option
       *ngFor="let prediction of predictions$ | async"
       [value]="prediction"
