@@ -75,8 +75,13 @@ export class PlacesResultsTableComponent implements AfterViewInit {
         cellTemplateRef: this.iconCellTemplate,
         cellDisplayValue: (
           element: google.maps.places.PlaceResult
-        ): string | undefined =>
-          element?.opening_hours?.isOpen() ? 'done' : 'close',
+        ): string | undefined => {
+          try {
+            return element?.opening_hours?.open_now ? 'done' : 'close';
+          } catch (error) {
+            return '';
+          }
+        },
       },
     ];
 
