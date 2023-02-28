@@ -43,6 +43,9 @@ export class PlaceSearchComponent implements OnInit, OnDestroy {
 
   public async launchAutoCompleteSearch(searchValue: string): Promise<void> {
     this._predictionsSubj.next([]);
+    if (!searchValue) {
+      return;
+    }
     const predictions = await this._placesService.getPlacePredictions(
       searchValue
     );
@@ -61,5 +64,10 @@ export class PlaceSearchComponent implements OnInit, OnDestroy {
     }
     const prediction = event.option.value;
     this._placesResultsService.nearbySearchFromPrediction(prediction);
+  }
+
+  public clearInput(): void {
+    this.inputControl.setValue('');
+    this._placesResultsService.clearAllResults();
   }
 }

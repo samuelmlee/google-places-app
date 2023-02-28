@@ -37,4 +37,8 @@ export class PlacesResultsService {
     );
     this._nearbyRestaurantsSubj.next(placeResults);
   }
+
+  public clearAllResults(): void {
+    this._nearbyRestaurantsSubj.next([]);
+  }
 }

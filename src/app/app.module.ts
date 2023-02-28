@@ -11,6 +11,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { StarRatingModule } from 'angular-star-rating';
 import { AppComponent } from './app.component';
 import { PlaceSearchComponent } from './place-search/place-search.component';
 import { PlacesResultsTableComponent } from './places-results/places-results-table/places-results-table.component';
@@ -38,6 +39,7 @@ import { PlacesResultsComponent } from './places-results/places-results.componen
     MatTableModule,
     MatTabsModule,
     ReactiveFormsModule,
+    StarRatingModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],

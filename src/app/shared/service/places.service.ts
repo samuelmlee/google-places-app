@@ -62,17 +62,7 @@ export class PlacesService {
     prediction: google.maps.places.AutocompletePrediction,
     type: SearchType
   ): Promise<google.maps.places.PlaceResult[]> {
-    const detailsRequest: google.maps.places.PlaceDetailsRequest = {
-      placeId: prediction.place_id,
-    };
-
-    const placeResult = await new Promise((resolve): void =>
-      this._placesService?.getDetails(
-        detailsRequest,
-        async (result: google.maps.places.PlaceResult | null): Promise<void> =>
-          resolve(result)
-      )
-    );
+    const placeResult = await this.getPlaceDetailsWithId(prediction.place_id);
     const geometry = (placeResult as google.maps.places.PlaceResult).geometry;
 
     const nearbyRequest = {
@@ -84,11 +74,41 @@ export class PlacesService {
     const nearbyResults = await new Promise((resolve): void =>
       this._placesService?.nearbySearch(
         nearbyRequest,
-        async (
-          results: google.maps.places.PlaceResult[] | null
-        ): Promise<void> => resolve(results)
+        (results: google.maps.places.PlaceResult[] | null): void =>
+          resolve(results)
       )
     );
-    return nearbyResults as google.maps.places.PlaceResult[];
+
+    // if more than 10 requests sent per minute, will get OVER_QUERY_LIMIT status for placesService.getDetails
+    const limitedNearbyResults = (
+      nearbyResults as google.maps.places.PlaceResult[]
+    ).slice(0, 8);
+
+    const detailPromises = limitedNearbyResults.map(
+      (result): Promise<google.maps.places.PlaceResult | null> => {
+        if (!result.place_id) {
+          return Promise.resolve(null);
+        }
+        return this.getPlaceDetailsWithId(result.place_id);
+      }
+    );
+    const nearbyResultsDetails = await Promise.all(detailPromises);
+
+    return nearbyResultsDetails as google.maps.places.PlaceResult[];
+  }
+
+  private async getPlaceDetailsWithId(
+    placeId: string
+  ): Promise<google.maps.places.PlaceResult | null> {
+    const detailsRequest: google.maps.places.PlaceDetailsRequest = {
+      placeId,
+    };
+    return new Promise((resolve): void => {
+      this._placesService?.getDetails(
+        detailsRequest,
+        (result: google.maps.places.PlaceResult | null, status): void =>
+          resolve(result)
+      );
+    });
   }
 }

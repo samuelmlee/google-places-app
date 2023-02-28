@@ -1,8 +1,17 @@
 .app-container {
+  height: calc(100vh - 64px);
+  width: calc(100vw - 128px);
+  padding: 32px 64px;
   display: flex;
-  justify-content: space-around;
 
-  .search-field {
-    width: 500px;
+  .search-section {
+    width: 50%;
+  }
+
+  .map {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
