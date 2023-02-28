@@ -6,6 +6,12 @@
 
   .search-section {
     width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    .search-block {
+      height: 800px;
+    }
   }
 
   .map {

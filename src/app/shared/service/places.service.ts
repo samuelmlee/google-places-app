@@ -18,13 +18,17 @@ export class PlacesService {
     this._googleMap = map;
     this._autocompleteService = new google.maps.places.AutocompleteService();
     this._placesService = new google.maps.places.PlacesService(map);
-    this.centerMapOnPlace();
+    this.centerOnPlaceDescription('Alexanderplatz');
   }
 
-  private centerMapOnPlace(): void {
-    const request = {
-      query: 'Museum of Contemporary Art Australia',
+  public centerOnPlaceDescription(
+    query: string,
+    locationBias?: google.maps.places.LocationBias
+  ): void {
+    const request: google.maps.places.FindPlaceFromQueryRequest = {
+      locationBias,
       fields: ['name', 'geometry'],
+      query,
     };
     this._placesService?.findPlaceFromQuery(
       request,
@@ -79,10 +83,10 @@ export class PlacesService {
       )
     );
 
-    // if more than 10 requests sent per minute, will get OVER_QUERY_LIMIT status for placesService.getDetails
+    // if more than 8 requests sent per minute, will get OVER_QUERY_LIMIT status for placesService.getDetails
     const limitedNearbyResults = (
       nearbyResults as google.maps.places.PlaceResult[]
-    ).slice(0, 8);
+    ).slice(0, 7);
 
     const detailPromises = limitedNearbyResults.map(
       (result): Promise<google.maps.places.PlaceResult | null> => {
@@ -106,8 +110,9 @@ export class PlacesService {
     return new Promise((resolve): void => {
       this._placesService?.getDetails(
         detailsRequest,
-        (result: google.maps.places.PlaceResult | null, status): void =>
-          resolve(result)
+        (result: google.maps.places.PlaceResult | null, status): void => {
+          resolve(result);
+        }
       );
     });
   }
