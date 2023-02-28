@@ -77,7 +77,7 @@ export class PlacesResultsTableComponent implements AfterViewInit {
           element: google.maps.places.PlaceResult
         ): string | undefined => {
           try {
-            return element?.opening_hours?.open_now ? 'done' : 'close';
+            return element?.opening_hours?.isOpen() ? 'done' : 'close';
           } catch (error) {
             return '';
           }
