@@ -84,21 +84,21 @@ export class PlacesService {
     );
 
     // if more than 8 requests sent per minute, will get OVER_QUERY_LIMIT status for placesService.getDetails
-    const limitedNearbyResults = (
-      nearbyResults as google.maps.places.PlaceResult[]
-    ).slice(0, 7);
+    // const limitedNearbyResults = (
+    //   nearbyResults as google.maps.places.PlaceResult[]
+    // ).slice(0, 20);
 
-    const detailPromises = limitedNearbyResults.map(
-      (result): Promise<google.maps.places.PlaceResult | null> => {
-        if (!result.place_id) {
-          return Promise.resolve(null);
-        }
-        return this.getPlaceDetailsWithId(result.place_id);
-      }
-    );
-    const nearbyResultsDetails = await Promise.all(detailPromises);
+    // const detailPromises = limitedNearbyResults.map(
+    //   (result): Promise<google.maps.places.PlaceResult | null> => {
+    //     if (!result.place_id) {
+    //       return Promise.resolve(null);
+    //     }
+    //     return this.getPlaceDetailsWithId(result.place_id);
+    //   }
+    // );
+    // const nearbyResultsDetails = await Promise.all(detailPromises);
 
-    return nearbyResultsDetails as google.maps.places.PlaceResult[];
+    return nearbyResults as google.maps.places.PlaceResult[];
   }
 
   private async getPlaceDetailsWithId(
