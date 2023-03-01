@@ -1,17 +1,18 @@
 <div class="app-container">
-  <div class="search-section">
+  <mat-card class="search-panel">
     <div class="search-block">
       <app-place-search></app-place-search>
       <app-places-results class="results-tabs"></app-places-results>
     </div>
-  </div>
-  <google-map
-    height="800px"
-    width="800px"
-    class="map"
-    #googleMap
-    *ngIf="mapApiLoaded | async"
-  >
-    <map-marker *ngFor="let location of locations$ | async"></map-marker>
-  </google-map>
+  </mat-card>
+  <mat-card class="map-panel">
+    <google-map
+      height="800px"
+      width="800px"
+      #googleMap
+      *ngIf="mapApiLoaded | async"
+    >
+      <map-marker *ngFor="let location of locations$ | async"></map-marker>
+    </google-map>
+  </mat-card>
 </div>
