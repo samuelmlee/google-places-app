@@ -16,9 +16,6 @@ type ColumConfiguration = {
   header: string;
   width: string;
   cellTemplateRef: TemplateRef<unknown> | undefined;
-  cellDisplayValue: (
-    element: google.maps.places.PlaceResult
-  ) => string | number | undefined;
 };
 
 @Component({
@@ -55,28 +52,18 @@ export class PlacesResultsTableComponent implements AfterViewInit {
         header: 'Name',
         width: '30%',
         cellTemplateRef: this.defaultCellTemplate,
-        cellDisplayValue: (
-          element: google.maps.places.PlaceResult
-        ): string | undefined => element?.name,
       },
       {
         columnDef: 'rating',
         header: 'Ratings',
         width: '20%',
         cellTemplateRef: this.ratingCellTemplate,
-        cellDisplayValue: (
-          element: google.maps.places.PlaceResult
-        ): number | undefined => element?.rating,
       },
       {
-        columnDef: 'isOpen',
+        columnDef: 'opening_hours',
         header: 'Is open',
         width: '20%',
         cellTemplateRef: this.iconCellTemplate,
-        cellDisplayValue: (
-          element: google.maps.places.PlaceResult
-        ): string | undefined =>
-          element?.opening_hours?.open_now ? 'done' : 'close',
       },
     ];
 

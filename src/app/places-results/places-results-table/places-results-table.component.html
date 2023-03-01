@@ -15,7 +15,7 @@
       <ng-container
         [ngTemplateOutlet]="column.cellTemplateRef ?? null"
         [ngTemplateOutletContext]="{
-          displayValue: column.cellDisplayValue(row)
+          displayValue: row[column.columnDef]
         }"
       ></ng-container>
     </td>
@@ -38,5 +38,7 @@
 </ng-template>
 
 <ng-template #iconCellTemplate let-displayValue="displayValue">
-  <mat-icon [fontIcon]="displayValue"></mat-icon>
+  <mat-icon
+    [fontIcon]="displayValue?.['open_now'] ? 'done' : 'close'"
+  ></mat-icon>
 </ng-template>
