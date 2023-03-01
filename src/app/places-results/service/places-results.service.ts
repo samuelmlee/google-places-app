@@ -49,19 +49,23 @@ export class PlacesResultsService {
     const nearbyResults =
       await this._googleApiService.getNearbySearchFromRequest(nearbyRequest);
 
-    const detailPromises = (
-      nearbyResults as google.maps.places.PlaceResult[]
-    ).map((result): Promise<google.maps.places.PlaceResult | null> => {
-      if (!result.place_id) {
-        return Promise.resolve(null);
-      }
-      return this._googleApiService.getPlaceDetailsWithId(result.place_id);
-    });
-    const nearbyResultsDetails = (await Promise.all(
-      detailPromises
-    )) as google.maps.places.PlaceResult[];
+    if (!nearbyResults) {
+      return;
+    }
 
-    this._nearbyRestaurantsSubj.next(nearbyResultsDetails);
+    // const detailPromises = (
+    //   nearbyResults as google.maps.places.PlaceResult[]
+    // ).map((result): Promise<google.maps.places.PlaceResult | null> => {
+    //   if (!result.place_id) {
+    //     return Promise.resolve(null);
+    //   }
+    //   return this._googleApiService.getPlaceDetailsWithId(result.place_id);
+    // });
+    // const nearbyResultsDetails = (await Promise.all(
+    //   detailPromises
+    // )) as google.maps.places.PlaceResult[];
+
+    this._nearbyRestaurantsSubj.next(nearbyResults);
   }
 
   public clearAllResults(): void {
