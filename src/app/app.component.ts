@@ -1,8 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, ViewChild } from '@angular/core';
 import { GoogleMap } from '@angular/google-maps';
-import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs';
-import { environment } from '../environments/environment';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { GoogleApiService } from './shared/service/google-api-service';
 import { PlacesService } from './shared/service/places.service';
 
 @Component({
@@ -20,21 +19,13 @@ export class AppComponent {
     if (!map?.googleMap) {
       return;
     }
-    this._placesService.initServices(map.googleMap);
+    this._placesService.initMap(map.googleMap);
   }
 
   constructor(
     private _placesService: PlacesService,
-    private _httpClient: HttpClient
+    googleApiService: GoogleApiService
   ) {
-    this.mapApiLoaded = _httpClient
-      .jsonp(
-        `https://maps.googleapis.com/maps/api/js?key=${environment.googleApiKey}&libraries=places`,
-        'callback'
-      )
-      .pipe(
-        map(() => true),
-        catchError(() => of(false))
-      );
+    this.mapApiLoaded = googleApiService.loadGoogleMapsApi();
   }
 }

@@ -1,73 +1,33 @@
 import { Injectable } from '@angular/core';
 import { SearchType } from 'src/app/places-results/places-results-table/model/search-type';
+import { GoogleApiService } from './google-api-service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PlacesService {
   private _googleMap: google.maps.Map | undefined;
-  private _placesService: google.maps.places.PlacesService | undefined;
-  private _autocompleteService:
-    | google.maps.places.AutocompleteService
-    | undefined;
 
-  public initServices(map: google.maps.Map): void {
+  constructor(private _googleApiService: GoogleApiService) {}
+
+  public initMap(map: google.maps.Map): void {
     if (!map) {
       return;
     }
     this._googleMap = map;
-    this._autocompleteService = new google.maps.places.AutocompleteService();
-    this._placesService = new google.maps.places.PlacesService(map);
-    this.centerOnPlaceDescription('Alexanderplatz');
-  }
-
-  public centerOnPlaceDescription(
-    query: string,
-    locationBias?: google.maps.places.LocationBias
-  ): void {
-    const request: google.maps.places.FindPlaceFromQueryRequest = {
-      locationBias,
-      fields: ['name', 'geometry'],
-      query,
-    };
-    this._placesService?.findPlaceFromQuery(
-      request,
-      (results, status): void => {
-        if (status === google.maps.places.PlacesServiceStatus.OK && results) {
-          if (!results[0] || !results[0]?.geometry?.location) {
-            return;
-          }
-          this._googleMap?.setCenter(results[0].geometry.location);
-        }
-      }
-    );
-  }
-
-  public async getPlacePredictions(
-    address: string
-  ): Promise<google.maps.places.AutocompletePrediction[]> {
-    const request = {
-      input: address,
-      componentRestrictions: { country: 'de' },
-      types: ['geocode'],
-    };
-    try {
-      const response = await this._autocompleteService?.getPlacePredictions(
-        request
-      );
-      return response?.predictions ?? [];
-    } catch (error) {
-      console.log('Error retrieving suggestions :', error);
-      return [];
-    }
   }
 
   public async nearbySearchFromPrediction(
     prediction: google.maps.places.AutocompletePrediction,
     type: SearchType
   ): Promise<google.maps.places.PlaceResult[]> {
-    const placeResult = await this.getPlaceDetailsWithId(prediction.place_id);
-    const geometry = (placeResult as google.maps.places.PlaceResult).geometry;
+    const result = await this._googleApiService.getPlaceDetailsWithId(
+      prediction.place_id
+    );
+    if (!result) {
+      return [];
+    }
+    const geometry = result?.geometry;
 
     const nearbyRequest = {
       location: geometry?.location,
@@ -75,45 +35,21 @@ export class PlacesService {
       type: type,
     };
 
-    const nearbyResults = await new Promise((resolve): void =>
-      this._placesService?.nearbySearch(
-        nearbyRequest,
-        (results: google.maps.places.PlaceResult[] | null): void =>
-          resolve(results)
-      )
-    );
+    const nearbyResults =
+      await this._googleApiService.getNearbySearchFromRequest(nearbyRequest);
 
-    // if more than 8 requests sent per minute, will get OVER_QUERY_LIMIT status for placesService.getDetails
-    const limitedNearbyResults = (
+    const detailPromises = (
       nearbyResults as google.maps.places.PlaceResult[]
-    ).slice(0, 7);
-
-    const detailPromises = limitedNearbyResults.map(
-      (result): Promise<google.maps.places.PlaceResult | null> => {
-        if (!result.place_id) {
-          return Promise.resolve(null);
-        }
-        return this.getPlaceDetailsWithId(result.place_id);
+    ).map((result): Promise<google.maps.places.PlaceResult | null> => {
+      if (!result.place_id) {
+        return Promise.resolve(null);
       }
-    );
-    const nearbyResultsDetails = await Promise.all(detailPromises);
-
-    return nearbyResultsDetails as google.maps.places.PlaceResult[];
-  }
-
-  private async getPlaceDetailsWithId(
-    placeId: string
-  ): Promise<google.maps.places.PlaceResult | null> {
-    const detailsRequest: google.maps.places.PlaceDetailsRequest = {
-      placeId,
-    };
-    return new Promise((resolve): void => {
-      this._placesService?.getDetails(
-        detailsRequest,
-        (result: google.maps.places.PlaceResult | null, status): void => {
-          resolve(result);
-        }
-      );
+      return this._googleApiService.getPlaceDetailsWithId(result.place_id);
     });
+    const nearbyResultsDetails = (await Promise.all(
+      detailPromises
+    )) as google.maps.places.PlaceResult[];
+
+    return nearbyResultsDetails;
   }
 }

@@ -8,7 +8,7 @@ import {
   Subscription,
 } from 'rxjs';
 import { PlacesResultsService } from '../places-results/service/places-results.service';
-import { PlacesService } from '../shared/service/places.service';
+import { GoogleApiService } from '../shared/service/google-api-service';
 
 @Component({
   selector: 'app-place-search',
@@ -25,7 +25,7 @@ export class PlaceSearchComponent implements OnInit, OnDestroy {
   public inputControl = new FormControl();
 
   constructor(
-    private _placesService: PlacesService,
+    private _googleApiService: GoogleApiService,
     private _placesResultsService: PlacesResultsService
   ) {}
 
@@ -46,9 +46,12 @@ export class PlaceSearchComponent implements OnInit, OnDestroy {
     if (!searchValue) {
       return;
     }
-    const predictions = await this._placesService.getPlacePredictions(
+    const predictions = await this._googleApiService.getPlaceAutocomplete(
       searchValue
     );
+    if (!predictions) {
+      return;
+    }
     this._predictionsSubj.next(predictions);
   }
 
@@ -63,7 +66,7 @@ export class PlaceSearchComponent implements OnInit, OnDestroy {
       return;
     }
     const prediction = event.option.value;
-    this._placesService.centerOnPlaceDescription(prediction.description);
+    // this._placesService.centerOnPlaceDescription(prediction.description);
     this._placesResultsService.nearbySearchFromPrediction(prediction);
   }
 
