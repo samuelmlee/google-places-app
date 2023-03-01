@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { GoogleMap } from '@angular/google-maps';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { GoogleApiService } from './shared/service/google-api-service';
-import { PlacesService } from './shared/service/places.service';
+import { MapService } from './shared/service/map.service';
 
 @Component({
   selector: 'app-root',
@@ -19,11 +19,11 @@ export class AppComponent {
     if (!map?.googleMap) {
       return;
     }
-    this._placesService.initMap(map.googleMap);
+    this._mapService.initMap(map.googleMap);
   }
 
   constructor(
-    private _placesService: PlacesService,
+    private _mapService: MapService,
     googleApiService: GoogleApiService
   ) {
     this.mapApiLoaded = googleApiService.loadGoogleMapsApi();

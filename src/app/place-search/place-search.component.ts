@@ -67,7 +67,10 @@ export class PlaceSearchComponent implements OnInit, OnDestroy {
     }
     const prediction = event.option.value;
     // this._placesService.centerOnPlaceDescription(prediction.description);
-    this._placesResultsService.nearbySearchFromPrediction(prediction);
+    this._placesResultsService.nearbySearchFromPrediction(
+      prediction,
+      'restaurant'
+    );
   }
 
   public clearInput(): void {

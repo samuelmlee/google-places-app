@@ -1,4 +1,8 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpParams,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   catchError,
@@ -20,7 +24,7 @@ type AutoCompleteResponse = {
 };
 
 type NearbySearchResponse = {
-  data: google.maps.places.PlaceResult[];
+  results: google.maps.places.PlaceResult[];
 };
 
 const QUERY_OUTPUT = 'json';
@@ -89,15 +93,14 @@ export class GoogleApiService {
   public getNearbySearchFromRequest(
     request: object
   ): Promise<google.maps.places.PlaceResult[] | null> {
-    const params = {
-      key: environment.googleApiKey,
-      ...request,
-    };
+    const params = new HttpParams({
+      fromObject: { key: environment.googleApiKey, ...request },
+    });
     const url = `${GOOGLE_MAPS_ENDPOINT}/nearbysearch/${QUERY_OUTPUT}`;
     const resultObs = this._httpClient.get(url, { params }).pipe(
       map(
         (response): google.maps.places.PlaceResult[] =>
-          (response as NearbySearchResponse).data
+          (response as NearbySearchResponse).results
       ),
       catchError((error): Observable<null> => {
         return this.errorHandler(error, 'getNearbySearchFromRequest');
