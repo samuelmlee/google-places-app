@@ -12,11 +12,11 @@ import { CONSTANTS } from 'src/app/config/constants';
 import { environment } from 'src/environments/environment';
 
 type PlaceDetailsResponse = {
-  data: google.maps.places.PlaceResult;
+  result: google.maps.places.PlaceResult;
 };
 
 type AutoCompleteResponse = {
-  data: google.maps.places.AutocompletePrediction[];
+  predictions: google.maps.places.AutocompletePrediction[];
 };
 
 type NearbySearchResponse = {
@@ -55,7 +55,7 @@ export class GoogleApiService {
     const resultObs = this._httpClient.get(url, { params }).pipe(
       map(
         (response): google.maps.places.AutocompletePrediction[] =>
-          (response as AutoCompleteResponse).data
+          (response as AutoCompleteResponse).predictions
       ),
       catchError((error): Observable<null> => {
         return this.errorHandler(error, 'getPlaceAutocomplete');
@@ -76,7 +76,7 @@ export class GoogleApiService {
     const resultObs = this._httpClient.get(url, { params }).pipe(
       map(
         (response): google.maps.places.PlaceResult =>
-          (response as PlaceDetailsResponse).data
+          (response as PlaceDetailsResponse).result
       ),
       catchError((error): Observable<null> => {
         return this.errorHandler(error, 'getPlaceDetailsWithId');
