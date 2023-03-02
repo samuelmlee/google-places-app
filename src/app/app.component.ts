@@ -1,6 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { GoogleMap } from '@angular/google-maps';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { GoogleApiService } from './shared/service/google-api-service';
 import { MapService } from './shared/service/map.service';
 
@@ -8,12 +8,11 @@ import { MapService } from './shared/service/map.service';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  private _locationsSubj = new BehaviorSubject<google.maps.LatLng[]>([]);
-
+  public locations$: Observable<google.maps.LatLng[]> | undefined;
   public mapApiLoaded: Observable<boolean> | undefined;
-  public locations$ = this._locationsSubj.asObservable();
 
   @ViewChild('googleMap') set googleMap(map: GoogleMap) {
     if (!map?.googleMap) {

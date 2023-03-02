@@ -1,6 +1,6 @@
 <table
   mat-table
-  *ngIf="dataSource"
+  *ngIf="dataSource$ | async as dataSource"
   [dataSource]="dataSource"
   class="mat-elevation-z8"
 >

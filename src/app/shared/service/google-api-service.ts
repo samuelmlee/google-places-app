@@ -28,7 +28,7 @@ type NearbySearchResponse = {
 };
 
 const QUERY_OUTPUT = 'json';
-const GOOGLE_MAPS_ENDPOINT = CONSTANTS.GOOGLE_MAPS_ENDPOINT;
+const GOOGLE_MAPS_PLACE_ENDPOINT = `${CONSTANTS.GOOGLE_MAPS_ENDPOINT}/place`;
 
 @Injectable({ providedIn: 'root' })
 export class GoogleApiService {
@@ -37,7 +37,7 @@ export class GoogleApiService {
   public loadGoogleMapsApi(): Observable<boolean> {
     return this._httpClient
       .jsonp(
-        `https://maps.googleapis.com/maps/api/js?key=${environment.googleApiKey}`,
+        `${CONSTANTS.GOOGLE_MAPS_ENDPOINT}/js?key=${environment.googleApiKey}`,
         'callback'
       )
       .pipe(
@@ -55,7 +55,7 @@ export class GoogleApiService {
       components: 'country:de',
       types: 'geocode',
     };
-    const url = `${GOOGLE_MAPS_ENDPOINT}/autocomplete/${QUERY_OUTPUT}`;
+    const url = `${GOOGLE_MAPS_PLACE_ENDPOINT}/autocomplete/${QUERY_OUTPUT}`;
     const resultObs = this._httpClient.get(url, { params }).pipe(
       map(
         (response): google.maps.places.AutocompletePrediction[] =>
@@ -76,7 +76,7 @@ export class GoogleApiService {
       key: environment.googleApiKey,
       place_id: placeId,
     };
-    const url = `${GOOGLE_MAPS_ENDPOINT}/details/${QUERY_OUTPUT}`;
+    const url = `${GOOGLE_MAPS_PLACE_ENDPOINT}/details/${QUERY_OUTPUT}`;
     const resultObs = this._httpClient.get(url, { params }).pipe(
       map(
         (response): google.maps.places.PlaceResult =>
@@ -96,7 +96,7 @@ export class GoogleApiService {
     const params = new HttpParams({
       fromObject: { key: environment.googleApiKey, ...request },
     });
-    const url = `${GOOGLE_MAPS_ENDPOINT}/nearbysearch/${QUERY_OUTPUT}`;
+    const url = `${GOOGLE_MAPS_PLACE_ENDPOINT}/nearbysearch/${QUERY_OUTPUT}`;
     const resultObs = this._httpClient.get(url, { params }).pipe(
       map(
         (response): google.maps.places.PlaceResult[] =>

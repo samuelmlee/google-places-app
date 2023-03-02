@@ -1,4 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteActivatedEvent } from '@angular/material/autocomplete';
 import {
@@ -14,6 +19,7 @@ import { GoogleApiService } from '../shared/service/google-api-service';
   selector: 'app-place-search',
   templateUrl: './place-search.component.html',
   styleUrls: ['./place-search.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlaceSearchComponent implements OnInit, OnDestroy {
   private _predictionsSubj = new BehaviorSubject<

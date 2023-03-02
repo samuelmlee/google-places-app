@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   Input,
   TemplateRef,
@@ -7,7 +8,7 @@ import {
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { StarRatingComponent } from 'angular-star-rating';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { PlacesResultsService } from '../service/places-results.service';
 import { SearchType } from './model/search-type';
 
@@ -22,6 +23,7 @@ type ColumConfiguration = {
   selector: 'app-places-results-table',
   templateUrl: './places-results-table.component.html',
   styleUrls: ['./places-results-table.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlacesResultsTableComponent implements AfterViewInit {
   @Input() type: SearchType | undefined;
@@ -38,8 +40,12 @@ export class PlacesResultsTableComponent implements AfterViewInit {
     | TemplateRef<StarRatingComponent>
     | undefined;
 
+  private _dataSourceSubj = new BehaviorSubject<
+    MatTableDataSource<google.maps.places.PlaceResult>
+  >(new MatTableDataSource<google.maps.places.PlaceResult>([]));
+
+  public dataSource$ = this._dataSourceSubj.asObservable();
   public tableResult$: Observable<google.maps.places.PlaceResult[]> | undefined;
-  public dataSource!: MatTableDataSource<google.maps.places.PlaceResult>;
   public displayedColumns: string[] = [];
   public columns: ColumConfiguration[] = [];
 
@@ -75,7 +81,7 @@ export class PlacesResultsTableComponent implements AfterViewInit {
     );
 
     this.tableResult$?.subscribe((results): void => {
-      this.dataSource = new MatTableDataSource(results);
+      this._dataSourceSubj.next(new MatTableDataSource(results));
     });
     this.displayedColumns = this.columns.map((c): string => c.columnDef);
   }
