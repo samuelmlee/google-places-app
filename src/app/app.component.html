@@ -15,7 +15,7 @@
       <map-marker
         *ngFor="let marker of markers$ | async"
         [position]="marker"
-        [label]="marker.title"
+        [label]="{ text: marker.title, className: 'marker-position' }"
         [options]="{ draggable: false }"
       ></map-marker>
     </google-map>
