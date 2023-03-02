@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { GoogleMap } from '@angular/google-maps';
 import { Observable } from 'rxjs';
 import { GoogleApiService } from './shared/service/google-api-service';
-import { MapService } from './shared/service/map.service';
+import { DisplayedMarker, MapService } from './shared/service/map.service';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +11,7 @@ import { MapService } from './shared/service/map.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  public locations$: Observable<google.maps.LatLng[]> | undefined;
+  public markers$: Observable<DisplayedMarker[]> | undefined;
   public mapApiLoaded: Observable<boolean> | undefined;
 
   @ViewChild('googleMap') set googleMap(map: GoogleMap) {
@@ -26,5 +26,6 @@ export class AppComponent {
     googleApiService: GoogleApiService
   ) {
     this.mapApiLoaded = googleApiService.loadGoogleMapsApi();
+    this.markers$ = this._mapService.displayedMarkers$;
   }
 }

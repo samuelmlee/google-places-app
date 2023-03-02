@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { GoogleApiService } from './google-api-service';
+
+export type DisplayedMarker = google.maps.LatLngLiteral & { title: string };
 
 @Injectable({
   providedIn: 'root',
@@ -8,13 +9,9 @@ import { GoogleApiService } from './google-api-service';
 export class MapService {
   private _googleMap: google.maps.Map | undefined;
   private _infoWindow: google.maps.InfoWindow | undefined;
-  private displayedLocationsSubj = new BehaviorSubject<google.maps.LatLng[]>(
-    []
-  );
+  private displayedMarkersSubj = new BehaviorSubject<DisplayedMarker[]>([]);
 
-  public displayedLocations$ = this.displayedLocationsSubj.asObservable();
-
-  constructor(private _googleApiService: GoogleApiService) {}
+  public displayedMarkers$ = this.displayedMarkersSubj.asObservable();
 
   public initMap(map: google.maps.Map): void {
     if (!map) {
@@ -22,10 +19,18 @@ export class MapService {
     }
     this._googleMap = map;
     this._infoWindow = new google.maps.InfoWindow();
-    this.centerOnUserPosition();
+    this.centerOnBrowserPosition();
   }
 
-  private centerOnUserPosition(): void {
+  public centerMapOnPosition(latlng: { lat: number; lng: number }): void {
+    this._googleMap?.setCenter(latlng);
+  }
+
+  public updateMarkersOnMap(locations: DisplayedMarker[]): void {
+    this.displayedMarkersSubj.next(locations);
+  }
+
+  private centerOnBrowserPosition(): void {
     // Get browser geolocation.
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -34,7 +39,7 @@ export class MapService {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           };
-          this._googleMap?.setCenter(pos);
+          this.centerMapOnPosition(pos);
         },
         (): void => {
           if (!this._googleMap) {
@@ -43,12 +48,6 @@ export class MapService {
           this.handleLocationError(true, this._googleMap.getCenter());
         }
       );
-    } else {
-      // Browser doesn't support Geolocation
-      if (!this._googleMap) {
-        return;
-      }
-      this.handleLocationError(false, this._googleMap.getCenter());
     }
   }
 

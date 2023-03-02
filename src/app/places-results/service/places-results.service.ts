@@ -1,6 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { GoogleApiService } from 'src/app/shared/service/google-api-service';
+import {
+  DisplayedMarker,
+  MapService,
+} from 'src/app/shared/service/map.service';
 import { SearchType } from '../places-results-table/model/search-type';
 
 @Injectable({
@@ -13,7 +17,10 @@ export class PlacesResultsService {
 
   public nearbyRestaurants$ = this._nearbyRestaurantsSubj.asObservable();
 
-  constructor(private _googleApiService: GoogleApiService) {}
+  constructor(
+    private _googleApiService: GoogleApiService,
+    private _mapService: MapService
+  ) {}
 
   public resolveResultsFromType(
     type: SearchType
@@ -39,9 +46,14 @@ export class PlacesResultsService {
       return;
     }
     const geometry = result?.geometry;
+    if (!geometry?.location?.lat || !geometry?.location?.lng) {
+      return;
+    }
+    const resultLat = Number(geometry.location.lat);
+    const resultLng = Number(geometry.location.lng);
 
     const nearbyRequest = {
-      location: `${geometry?.location?.lat},${geometry?.location?.lng}`,
+      location: `${resultLat},${resultLng}`,
       radius: 1000,
       type: type,
     };
@@ -53,22 +65,35 @@ export class PlacesResultsService {
       return;
     }
 
-    // const detailPromises = (
-    //   nearbyResults as google.maps.places.PlaceResult[]
-    // ).map((result): Promise<google.maps.places.PlaceResult | null> => {
-    //   if (!result.place_id) {
-    //     return Promise.resolve(null);
-    //   }
-    //   return this._googleApiService.getPlaceDetailsWithId(result.place_id);
-    // });
-    // const nearbyResultsDetails = (await Promise.all(
-    //   detailPromises
-    // )) as google.maps.places.PlaceResult[];
-
     this._nearbyRestaurantsSubj.next(nearbyResults);
+
+    const coordinates = nearbyResults
+      .map((result): DisplayedMarker | null =>
+        this.fromPlaceResultToMarker(result)
+      )
+      .filter((marker): boolean => marker !== null) as DisplayedMarker[];
+    this._mapService.updateMarkersOnMap(coordinates);
+    const marker = this.fromPlaceResultToMarker(result);
+    if (!marker) {
+      return;
+    }
+    this._mapService.centerMapOnPosition(marker);
   }
 
   public clearAllResults(): void {
     this._nearbyRestaurantsSubj.next([]);
+    this._mapService.updateMarkersOnMap([]);
+  }
+
+  private fromPlaceResultToMarker(
+    result: google.maps.places.PlaceResult
+  ): DisplayedMarker | null {
+    const geometry = result?.geometry;
+    if (!geometry?.location?.lat || !geometry?.location?.lng) {
+      return null;
+    }
+    const resultLat = Number(geometry.location.lat);
+    const resultLng = Number(geometry.location.lng);
+    return { lat: resultLat, lng: resultLng, title: result.name ?? '' };
   }
 }

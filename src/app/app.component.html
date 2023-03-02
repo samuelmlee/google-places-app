@@ -12,7 +12,12 @@
       #googleMap
       *ngIf="mapApiLoaded | async"
     >
-      <map-marker *ngFor="let location of locations$ | async"></map-marker>
+      <map-marker
+        *ngFor="let marker of markers$ | async"
+        [position]="marker"
+        [label]="marker.title"
+        [options]="{ draggable: false }"
+      ></map-marker>
     </google-map>
   </mat-card>
 </div>
