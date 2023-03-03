@@ -13,6 +13,19 @@ import { DisplayedMarker, MapService } from './shared/service/map.service';
 export class AppComponent {
   public markers$: Observable<DisplayedMarker[]> | undefined;
   public mapApiLoaded: Observable<boolean> | undefined;
+  public mapOptions: google.maps.MapOptions = {
+    styles: [
+      {
+        featureType: 'poi.business',
+        stylers: [{ visibility: 'off' }],
+      },
+      {
+        featureType: 'transit',
+        elementType: 'labels.icon',
+        stylers: [{ visibility: 'off' }],
+      },
+    ],
+  };
 
   @ViewChild('googleMap') set googleMap(map: GoogleMap) {
     if (!map?.googleMap) {
