@@ -1,5 +1,5 @@
 {
-  "name": "google-places-app",
+  "name": "private-google-places",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -7,7 +7,7 @@
     "start": "ng serve",
     "build": "npm run config && ng build",
     "build:stats": "npm run build -- --statsJson=true",
-    "analyze": "webpack-bundle-analyzer dist/google-places-app/stats.json",
+    "analyze": "webpack-bundle-analyzer dist/private-google-places/stats.json",
     "config": "ts-node src/environments/set-env",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

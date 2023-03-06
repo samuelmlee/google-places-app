@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "google-places-app": {
+    "private-google-places": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -18,7 +18,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/google-places-app",
+            "outputPath": "dist/private-google-places",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -59,14 +59,14 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "google-places-app:build:production"
+              "browserTarget": "private-google-places:build:production"
             },
             "development": {
-              "browserTarget": "google-places-app:build:development"
+              "browserTarget": "private-google-places:build:development"
             }
           },
           "options": {
-            "browserTarget": "google-places-app:build",
+            "browserTarget": "private-google-places:build",
             "proxyConfig": "src/proxy.conf.json"
           },
           "defaultConfiguration": "development"
@@ -74,7 +74,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "google-places-app:build"
+            "browserTarget": "private-google-places:build"
           }
         },
         "test": {
